@@ -1,0 +1,9 @@
+$ n8n import:workflow --input=/private/tmp/lab-n8n-node-study-guide/workflow.json
+[license SDK] Skipping renewal on init: renewOnInit is disabled in config
+[license SDK] Skipping renewal on init: license cert is not initialized
+Importing 1 workflows...
+Successfully imported 1 workflow.
+
+STDERR:
+
+Exit code: 0

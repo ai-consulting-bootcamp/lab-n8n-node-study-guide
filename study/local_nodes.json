@@ -1,0 +1,342 @@
+{
+  "name": "Ten local node types \u2014 executed study",
+  "nodes": [
+    {
+      "id": "30981e59-eca2-4078-82fc-abc721f90c58",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "9058a274-8ba2-45ed-a16b-f41e97331fc6",
+      "name": "Study Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\"tickets\": [{\"ticket_id\": \"T-002\", \"rank\": 2}, {\"ticket_id\": \"T-001\", \"rank\": 1}, {\"ticket_id\": \"T-001\", \"rank\": 1}]}",
+        "options": {}
+      }
+    },
+    {
+      "id": "c1b21c85-7256-4509-b8ea-c907a21e1b2b",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "fieldToSplitOut": "tickets",
+        "options": {}
+      }
+    },
+    {
+      "id": "a8bee655-a952-44fe-b41c-adfbabd1b2e1",
+      "name": "Remove Duplicates",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "operation": "removeDuplicateInputItems",
+        "compare": "allFields",
+        "options": {}
+      }
+    },
+    {
+      "id": "361d5509-c85c-4003-953c-bbd9ed4fbef2",
+      "name": "Sort",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "type": "simple",
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "rank",
+              "order": "ascending"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "27cd473c-2197-4beb-8891-a6df32a16abb",
+      "name": "Limit",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "maxItems": 1,
+        "keep": "firstItems"
+      }
+    },
+    {
+      "id": "3687e240-c38a-438e-9326-655ab2155753",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ $json.ticket_id === \"T-001\" ? 0 : 1 }}"
+      }
+    },
+    {
+      "id": "da33f6f4-26ab-43f6-a460-3ee775bda8dc",
+      "name": "IF Study",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "768c53a0-1459-4972-b42d-72b4be8ae834",
+              "leftValue": "={{ $json.rank === 1 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "ab4225cb-42c7-4b76-8a35-8dc4b4952425",
+      "name": "Label A",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -100
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\"label\":\"A\"}",
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "912cab5d-2a85-4842-8f39-346dea1bbc4c",
+      "name": "Label B",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        100
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\"label\":\"B\"}",
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "86445692-80aa-4fa9-a168-ab6fb45056da",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1980,
+        0
+      ],
+      "parameters": {
+        "mode": "append",
+        "numberInputs": 2
+      }
+    },
+    {
+      "id": "1008bfbb-0788-4f9e-bae1-656f9c1f4ff3",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        0
+      ],
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "records",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Study Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Study Input": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "IF Study",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "IF Study": {
+      "main": [
+        [
+          {
+            "node": "Label A",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Label B",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Label A": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Label B": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "id": "NodeStudyLocal001"
+}

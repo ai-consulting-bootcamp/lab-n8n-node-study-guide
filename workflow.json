@@ -1,0 +1,143 @@
+{
+  "name": "Ticket validation \u2014 minimal study guide",
+  "nodes": [
+    {
+      "id": "a58a832f-af7e-4295-8553-95244600245f",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "ed5f3d4d-f613-44b8-9856-cad7967680fe",
+      "name": "Edit Fields (Set)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\"ticket_id\": \"T-001\", \"category\": \"portal\", \"message\": \"The portal opens at unpredictable times\", \"priority\": \"high\"}",
+        "options": {}
+      }
+    },
+    {
+      "id": "31cd0a66-117a-4419-a929-2cfe8f266dbc",
+      "name": "IF (Validation)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9107a4ef-0db9-4f10-9647-386012dd47e9",
+              "leftValue": "={{ /^T-[0-9]+$/.test($json.ticket_id ?? '') && typeof $json.ticket_id === 'string' && ['portal','monster','psychic','environmental'].includes($json.category) && typeof $json.message === 'string' && $json.message.trim().length > 0 && ['low','medium','high'].includes($json.priority) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "07ae5c09-3bdf-4da1-bfb3-fa5134929eb7",
+      "name": "Structured Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        -120
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ {ticket_id: $json.ticket_id, category: $json.category, message: $json.message, priority: $json.priority, status: 'accepted', queue: $json.category + '-support'} }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "244ffb5e-aef6-4cf4-b0a0-d973edf6fd51",
+      "name": "Rejection Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        120
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ {ticket_id: $json.ticket_id ?? null, status: 'rejected', reason: 'Require T-<digits> ticket_id, supported category, nonblank message, and low/medium/high priority.'} }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields (Set)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields (Set)": {
+      "main": [
+        [
+          {
+            "node": "IF (Validation)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF (Validation)": {
+      "main": [
+        [
+          {
+            "node": "Structured Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejection Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "id": "TicketLabValid001"
+}
