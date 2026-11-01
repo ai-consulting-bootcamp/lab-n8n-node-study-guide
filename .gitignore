@@ -1,0 +1,11 @@
+.env
+.env.*
+.n8n/
+node_modules/
+*.sqlite
+*.sqlite-*
+*.log
+playwright-report/
+test-results/
+.DS_Store
+__pycache__/

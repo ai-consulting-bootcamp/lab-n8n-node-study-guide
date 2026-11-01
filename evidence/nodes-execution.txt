@@ -1,0 +1,490 @@
+$ n8n execute --id=NodeStudyLocal001 --rawOutput
+n8n Task Broker ready on 127.0.0.1, port 5679
+Failed to start Python task runner in internal mode. because its virtual environment is missing from this system. Launching a Python runner in internal mode is intended only for debugging and is not recommended for production. Users are encouraged to deploy in external mode. See: https://docs.n8n.io/hosting/configuration/task-runners/#setting-up-external-mode
+[license SDK] Skipping renewal on init: renewOnInit is disabled in config
+[license SDK] Skipping renewal on init: license cert is not initialized
+{
+  "data": {
+    "version": 1,
+    "startData": {},
+    "resultData": {
+      "runData": {
+        "Manual Trigger": [
+          {
+            "startTime": 1793570990268,
+            "executionIndex": 0,
+            "source": [],
+            "hints": [],
+            "executionTime": 0,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {},
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Study Input": [
+          {
+            "startTime": 1793570990269,
+            "executionIndex": 1,
+            "source": [
+              {
+                "previousNode": "Manual Trigger",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "tickets": [
+                        {
+                          "ticket_id": "T-002",
+                          "rank": 2
+                        },
+                        {
+                          "ticket_id": "T-001",
+                          "rank": 1
+                        },
+                        {
+                          "ticket_id": "T-001",
+                          "rank": 1
+                        }
+                      ]
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Split Out": [
+          {
+            "startTime": 1793570990270,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Study Input",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-002",
+                      "rank": 2
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Remove Duplicates": [
+          {
+            "startTime": 1793570990271,
+            "executionIndex": 3,
+            "source": [
+              {
+                "previousNode": "Split Out",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 0,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-002",
+                      "rank": 2
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 1
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Sort": [
+          {
+            "startTime": 1793570990271,
+            "executionIndex": 4,
+            "source": [
+              {
+                "previousNode": "Remove Duplicates",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 0,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 1
+                    }
+                  },
+                  {
+                    "json": {
+                      "ticket_id": "T-002",
+                      "rank": 2
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Limit": [
+          {
+            "startTime": 1793570990271,
+            "executionIndex": 5,
+            "source": [
+              {
+                "previousNode": "Sort",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Switch": [
+          {
+            "startTime": 1793570990272,
+            "executionIndex": 6,
+            "source": [
+              {
+                "previousNode": "Limit",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 11,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ],
+                []
+              ]
+            }
+          }
+        ],
+        "IF Study": [
+          {
+            "startTime": 1793570990283,
+            "executionIndex": 7,
+            "source": [
+              {
+                "previousNode": "Switch",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 3,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ],
+                []
+              ]
+            }
+          }
+        ],
+        "Label A": [
+          {
+            "startTime": 1793570990286,
+            "executionIndex": 8,
+            "source": [
+              {
+                "previousNode": "IF Study",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 0,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1,
+                      "label": "A"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Label B": [
+          {
+            "startTime": 1793570990287,
+            "executionIndex": 9,
+            "source": [
+              {
+                "previousNode": "IF Study",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 0,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1,
+                      "label": "B"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Merge": [
+          {
+            "startTime": 1793570990287,
+            "executionIndex": 10,
+            "source": [
+              {
+                "previousNode": "Label A",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              },
+              {
+                "previousNode": "Label B",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 4,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1,
+                      "label": "A"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "ticket_id": "T-001",
+                      "rank": 1,
+                      "label": "B"
+                    },
+                    "pairedItem": {
+                      "item": 0,
+                      "input": 1
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Aggregate": [
+          {
+            "startTime": 1793570990291,
+            "executionIndex": 11,
+            "source": [
+              {
+                "previousNode": "Merge",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "records": [
+                        {
+                          "ticket_id": "T-001",
+                          "rank": 1,
+                          "label": "A"
+                        },
+                        {
+                          "ticket_id": "T-001",
+                          "rank": 1,
+                          "label": "B"
+                        }
+                      ]
+                    },
+                    "pairedItem": [
+                      {
+                        "item": 0
+                      },
+                      {
+                        "item": 1
+                      }
+                    ]
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "lastNodeExecuted": "Aggregate"
+    },
+    "executionData": {
+      "contextData": {},
+      "nodeExecutionStack": [],
+      "metadata": {},
+      "waitingExecution": {},
+      "waitingExecutionSource": {},
+      "runtimeData": {
+        "version": 1,
+        "establishedAt": 1793570990266,
+        "source": "cli",
+        "triggerNode": {
+          "name": "Manual Trigger",
+          "type": "n8n-nodes-base.manualTrigger"
+        }
+      }
+    },
+    "resumeToken": "[REDACTED generated resume token]"
+  },
+  "mode": "cli",
+  "startedAt": "2026-11-01T22:09:50.265Z",
+  "stoppedAt": "2026-11-01T22:09:50.292Z",
+  "storedAt": "db",
+  "status": "success",
+  "finished": true
+}
+
+STDERR:
+
+Exit code: 0

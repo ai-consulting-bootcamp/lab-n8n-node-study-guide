@@ -1,0 +1,5 @@
+{
+  "ticket_id": "T-001",
+  "status": "rejected",
+  "reason": "Require T-<digits> ticket_id, supported category, nonblank message, and low/medium/high priority."
+}
