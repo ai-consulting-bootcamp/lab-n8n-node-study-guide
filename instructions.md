@@ -30,18 +30,7 @@ VERIFY: inspect one successful run and output artifact
 EXPLAIN: justify the mapping and operational risk
 ```
 
-## Prompt Discipline
 
-Use AI for review, debugging, or critique. Do not ask it to produce the final artifact or final answer.
-
-```text
-Role: Workflow reviewer
-Task: Challenge my event-flow plan before I build or submit.
-Inputs: trigger, sample payload, destination schema, and proof plan.
-Constraints: Do not build the workflow for me. Find brittle mappings and missing checks.
-Output format: three workflow risks, two trace checks, and one simplification.
-Verification: Name the execution evidence that proves the workflow ran.
-```
 
 ## Build
 
@@ -74,14 +63,16 @@ Do: Obtain copies of the workflows demonstrated in class for analysis.
 **Actions:**
 
 You should have access to these three workflows shared in class:
-
+File RAG_Chatbot_with_reranker.json :
    - **Workflow 1:** Build a PDF-based RAG system with OpenAI, Pinecone and Cohere reranking
    - **Workflow 2:** AI agent chat
-   - **Workflow 3:** You choose or create a small workflow
-     - **Note:** Any node that requires setting up Google OAuth credentials will take a long time to configure successfully, so budget extra time if your choice depends on one.
+
+File templaten8n_track_token_spend.json:
+   - **Workflow 3:** Qualification of Lead priority
+     
 
 
-> Search [n8n's template library](https://n8n.io/workflows/) for workflows with similar names to use as study material.
+
 
 
 **Open Each Workflow:**
