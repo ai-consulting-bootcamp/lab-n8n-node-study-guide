@@ -1,0 +1,491 @@
+{
+  "name": "Track LLM spend per workflow and alert in Slack on daily budget overruns",
+  "nodes": [
+    {
+      "id": "053559d0-d557-406e-a6fe-3db3616dcaf5",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        -300
+      ],
+      "parameters": {
+        "width": 520,
+        "height": 900,
+        "content": "## Track LLM spend per workflow and alert on daily budget overruns\n\n**Who it's for:** teams running AI workflows on n8n who want to see which workflow, node and model spends the tokens, and want a warning before a looping agent burns the monthly budget. Nothing to add to your existing workflows.\n\n**How it works**\n1. Every 15 minutes it reads the latest executions through the n8n API, with their run data.\n2. A Code node finds every chat model call (OpenAI, Anthropic, Gemini and other LangChain model nodes), reads the tokens n8n stored and prices the call.\n3. New calls go into a data table, one row per call. Calls already logged are skipped.\n4. It adds up today's spend per workflow. A workflow over its daily budget gets one Slack alert per day.\n5. Optional: it also unpublishes that workflow. **This is off by default** (`pauseOverBudget = false`).\n\n**How to set up**\n1. Create an API key in *Settings → n8n API* and an *n8n API* credential with it. Select it in both n8n nodes.\n2. Create the data table described in the note on the right and select it in all three data table nodes.\n3. In **Set configuration**, update `pricesPer1M` with your providers' current prices and set `dailyBudgetUsd`. Use `budgetOverrides` for per-workflow budgets: `{\"workflowId\": 20}`.\n4. Connect Slack and pick a channel.\n5. Run it once by hand, check the rows, then publish it.\n\n**Requirements:** n8n API access (self-hosted or a Cloud plan with the API), Data tables, Slack.\n\n**How to customize:** change the interval, raise `Limit` if you run more than 100 executions per interval, or send the alert by email instead of Slack."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1c64263d-ed67-4d36-bf6a-4f29706874f1",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        -300
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 680,
+        "height": 420,
+        "content": "### 1. Configure and fetch\nPrices per 1M tokens, then the latest executions with their run data (`Include Execution Details` is on)."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1e65e5a5-9fe1-4554-85dc-2f9f1839ef11",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        520,
+        -300
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 300,
+        "height": 420,
+        "content": "### 2. Find LLM calls\nOne item per chat model call: tokens, model, cost. Executions still running are left for the next run."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fefae2e5-09fd-42df-ba01-d34e6d285f8e",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        860,
+        -300
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 480,
+        "height": 420,
+        "content": "### 3. Save new calls only\nSkips calls whose `callKey` is already in the table, then inserts the rest."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "65061f1f-2654-484e-89b6-cb6eb6cbb0e6",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1380,
+        -300
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 420,
+        "height": 420,
+        "content": "### Data table columns\nCreate one table with these columns:\n- `callKey`, `executionId`, `workflowId`, `workflowName`, `nodeName`, `model`, `executionStatus`: **string**\n- `promptTokens`, `completionTokens`, `totalTokens`, `costUsd`: **number**\n- `estimated`: **boolean**\n- `finishedAt`: **date**\n\nPrices in `pricesPer1M` are examples in USD per 1M tokens (input/output). Check your provider's pricing page.\n\n`estimated` is `true` when the provider returned no usage and n8n stored its own estimate. In n8n 2.x the OpenAI Chat Model node with *Use Responses API* switched on stores only the estimate; turn that option off for exact counts."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f6ef3300-1479-45ce-85e4-48331f9f258e",
+      "name": "Every 15 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -160,
+        -40
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "6f515016-9080-434a-9b50-b5cdc6ce0918",
+      "name": "Set configuration",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        60,
+        -40
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c7e46ce-b10c-4b4f-b6d7-8264f81c7b6d",
+              "name": "pricesPer1M",
+              "type": "object",
+              "value": "{\n  \"gpt-4o-mini\": {\n    \"input\": 0.15,\n    \"output\": 0.6\n  },\n  \"gpt-4.1\": {\n    \"input\": 2,\n    \"output\": 8\n  },\n  \"claude-sonnet-4\": {\n    \"input\": 3,\n    \"output\": 15\n  },\n  \"gemini-2.5-flash\": {\n    \"input\": 0.3,\n    \"output\": 2.5\n  }\n}"
+            },
+            {
+              "id": "e62159e6-bbf6-451f-b89b-6a44225796f4",
+              "name": "dailyBudgetUsd",
+              "type": "number",
+              "value": 5
+            },
+            {
+              "id": "b3c2b746-f661-4cbd-a5b7-7fe91fe4af0e",
+              "name": "budgetOverrides",
+              "type": "object",
+              "value": "{}"
+            },
+            {
+              "id": "4df3fa61-a6b1-49dc-b2e3-cf78c4efacdd",
+              "name": "pauseOverBudget",
+              "type": "boolean",
+              "value": false
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "4ea1105f-f437-4a80-a0c4-d115ae3679f2",
+      "name": "Get recent executions",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        300,
+        -40
+      ],
+      "parameters": {
+        "limit": 100,
+        "filters": {},
+        "options": {
+          "activeWorkflows": true
+        },
+        "resource": "execution",
+        "requestOptions": {}
+      },
+      "credentials": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "491601f0-5db7-4d1a-a39c-b756f1e84b53",
+      "name": "Extract LLM calls and cost",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        600,
+        -40
+      ],
+      "parameters": {
+        "jsCode": "// One output item per LLM call found in the fetched executions.\nconst settings = $('Set configuration').first().json;\nconst prices = typeof settings.pricesPer1M === 'string'\n  ? JSON.parse(settings.pricesPer1M)\n  : settings.pricesPer1M || {};\n\n// Exact model name first, then the longest matching prefix\n// (\"gpt-4o-mini-2024-07-18\" uses the \"gpt-4o-mini\" price).\nfunction priceFor(model) {\n  if (prices[model]) return prices[model];\n  const key = Object.keys(prices)\n    .filter((k) => model.startsWith(k))\n    .sort((a, b) => b.length - a.length)[0];\n  return key ? prices[key] : null;\n}\n\nconst rows = [];\nfor (const item of $input.all()) {\n  const ex = item.json;\n  if (ex.workflowId === $workflow.id) continue; // skip this logger\n  if (!ex.stoppedAt) continue; // still running, picked up next time\n\n  const runData = (ex.data && ex.data.resultData && ex.data.resultData.runData) || {};\n  const nodes = (ex.workflowData && ex.workflowData.nodes) || [];\n\n  for (const [nodeName, runs] of Object.entries(runData)) {\n    runs.forEach((run, runIndex) => {\n      // Chat model sub-nodes write their output on the ai_languageModel connection.\n      const out = run.data && run.data.ai_languageModel && run.data.ai_languageModel[0] && run.data.ai_languageModel[0][0];\n      if (!out || !out.json) return;\n      const usage = out.json.tokenUsage || out.json.tokenUsageEstimate;\n      if (!usage) return;\n\n      const input = run.inputOverride && run.inputOverride.ai_languageModel && run.inputOverride.ai_languageModel[0] && run.inputOverride.ai_languageModel[0][0];\n      const opts = (input && input.json && input.json.options) || {};\n      const node = nodes.find((n) => n.name === nodeName) || {};\n      const p = node.parameters || {};\n      const model = String(\n        opts.model || opts.modelName || opts.model_name ||\n        (p.model && p.model.value) || p.model || p.modelName || 'unknown',\n      );\n\n      const promptTokens = usage.promptTokens || 0;\n      const completionTokens = usage.completionTokens || 0;\n      const price = priceFor(model);\n      const costUsd = price\n        ? Math.round(((promptTokens * price.input + completionTokens * price.output) / 1e6) * 1e8) / 1e8\n        : null;\n\n      rows.push({\n        json: {\n          callKey: `${ex.id}:${nodeName}:${runIndex}`,\n          executionId: String(ex.id),\n          workflowId: ex.workflowId,\n          workflowName: (ex.workflowData && ex.workflowData.name) || '',\n          nodeName,\n          model,\n          promptTokens,\n          completionTokens,\n          totalTokens: usage.totalTokens || promptTokens + completionTokens,\n          estimated: !out.json.tokenUsage,\n          costUsd,\n          executionStatus: ex.status || '',\n          finishedAt: ex.stoppedAt,\n        },\n      });\n    });\n  }\n}\nreturn rows;\n"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "0a08c2ac-41c9-4014-b2c9-0179de722510",
+      "name": "Skip calls already logged",
+      "type": "n8n-nodes-base.dataTable",
+      "position": [
+        920,
+        -40
+      ],
+      "parameters": {
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "callKey",
+              "keyValue": "={{ $json.callKey }}"
+            }
+          ]
+        },
+        "operation": "rowNotExists",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "0be1fe5e-5e1d-42ee-8d25-23a0a40bd69c",
+      "name": "Insert usage rows",
+      "type": "n8n-nodes-base.dataTable",
+      "position": [
+        1140,
+        -40
+      ],
+      "parameters": {
+        "columns": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "369e137a-00e6-4781-9df0-2e4ab7475370",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1380,
+        160
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 1120,
+        "height": 420,
+        "content": "### 4. Check today's budget\nSums today's rows per workflow. Over budget → one alert per workflow per day; unpublishes it only if `pauseOverBudget` is `true`."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "517270af-7638-469c-b467-3c851ce51117",
+      "name": "Get today's usage",
+      "type": "n8n-nodes-base.dataTable",
+      "position": [
+        1420,
+        400
+      ],
+      "parameters": {
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "finishedAt",
+              "keyValue": "={{ $now.startOf('day').toISO() }}",
+              "condition": "gte"
+            }
+          ]
+        },
+        "operation": "get",
+        "returnAll": true,
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        }
+      },
+      "executeOnce": true,
+      "typeVersion": 1.1,
+      "alwaysOutputData": false
+    },
+    {
+      "id": "58501f35-cfe9-496e-9d99-b79a099a3f1d",
+      "name": "Find workflows over budget",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1640,
+        400
+      ],
+      "parameters": {
+        "jsCode": "// Sums today's LLM spend per workflow and returns the ones over budget.\nconst settings = $('Set configuration').first().json;\nconst overrides = typeof settings.budgetOverrides === 'string'\n  ? JSON.parse(settings.budgetOverrides || '{}')\n  : settings.budgetOverrides || {};\n\nconst spend = {};\nfor (const row of $input.all()) {\n  const r = row.json;\n  if (!r.workflowId) continue;\n  const s = (spend[r.workflowId] = spend[r.workflowId] || { name: r.workflowName, usd: 0, calls: 0, unpriced: 0 });\n  s.calls += 1;\n  if (typeof r.costUsd === 'number') s.usd += r.costUsd;\n  else s.unpriced += 1;\n}\n\n// Alert once per workflow per day. Static data is kept between production runs.\nconst memory = $getWorkflowStaticData('global');\nconst today = $now.toFormat('yyyy-MM-dd');\nif (memory.alertDay !== today) {\n  memory.alertDay = today;\n  memory.alerted = {};\n}\n\nconst result = [];\nfor (const [workflowId, s] of Object.entries(spend)) {\n  if (workflowId === $workflow.id) continue;\n  const budget = Number(overrides[workflowId] ?? settings.dailyBudgetUsd);\n  if (!(s.usd > budget) || memory.alerted[workflowId]) continue;\n  memory.alerted[workflowId] = true;\n\n  const action = settings.pauseOverBudget ? 'It has been unpublished.' : 'It is still running.';\n  const unpriced = s.unpriced ? ` ${s.unpriced} call(s) had no price in the table and are not counted.` : '';\n  result.push({\n    json: {\n      workflowId,\n      workflowName: s.name,\n      spendUsd: Math.round(s.usd * 10000) / 10000,\n      budgetUsd: budget,\n      calls: s.calls,\n      message: `LLM budget exceeded: \"${s.name}\" (id ${workflowId}) spent $${s.usd.toFixed(4)} today, budget $${budget}, ${s.calls} call(s). ${action}${unpriced}`,\n    },\n  });\n}\nreturn result;\n"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "ddaad41c-e5a1-4ca8-b17f-6a47883e155a",
+      "name": "Pause over-budget workflows?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1860,
+        400
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c51fb5ce-0049-4e30-b809-d799019494a0",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Set configuration').first().json.pauseOverBudget }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "0004e0b3-0229-4573-aaf4-b0f28a6d5135",
+      "name": "Unpublish workflow",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        2080,
+        300
+      ],
+      "parameters": {
+        "operation": "deactivate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.workflowId }}"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "620d8d90-90a8-492f-abd8-7b7e52d508cd",
+      "name": "Send budget alert to Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        2300,
+        400
+      ],
+      "webhookId": "17bc0679-f23a-41c8-9d67-ce760b15ec3c",
+      "parameters": {
+        "text": "={{ $('Find workflows over budget').item.json.message }}",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        },
+        "otherOptions": {}
+      },
+      "credentials": {},
+      "typeVersion": 2.3
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "connections": {
+    "Every 15 minutes": {
+      "main": [
+        [
+          {
+            "node": "Set configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get today's usage": {
+      "main": [
+        [
+          {
+            "node": "Find workflows over budget",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert usage rows": {
+      "main": [
+        [
+          {
+            "node": "Get today's usage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set configuration": {
+      "main": [
+        [
+          {
+            "node": "Get recent executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unpublish workflow": {
+      "main": [
+        [
+          {
+            "node": "Send budget alert to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get recent executions": {
+      "main": [
+        [
+          {
+            "node": "Extract LLM calls and cost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip calls already logged": {
+      "main": [
+        [
+          {
+            "node": "Insert usage rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract LLM calls and cost": {
+      "main": [
+        [
+          {
+            "node": "Skip calls already logged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find workflows over budget": {
+      "main": [
+        [
+          {
+            "node": "Pause over-budget workflows?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pause over-budget workflows?": {
+      "main": [
+        [
+          {
+            "node": "Unpublish workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send budget alert to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
