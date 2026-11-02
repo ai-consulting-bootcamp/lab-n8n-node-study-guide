@@ -12,7 +12,6 @@
 | Edit Fields2 | Mode: Manual Mapping; sets `Priority` to `normal`; sets `reply` to a message using `{{ $json.name }}` | Include Other Input Fields: on; Input Fields to Include: All; Settings tab not inspected | Adds a priority and a personalized reply while keeping the original input fields | One item from the `If` node’s False Branch, including `name: Lena`, `company: ABC GmbH`, and `company_size: 10` | One item with all original fields plus `Priority: normal` and a personalized `reply` addressed to Lena | Adds the `Priority` and `reply` fields; keeps the incoming fields unchanged. |
 | Message a Model | Resource: Text; operation: Message a Model; model: GPT-5.4-MINI; messages include System and User roles | Settings tab not inspected | Sends the messages to the selected model and returns a generated response | One empty JSON item from the Manual Trigger; the prompt uses today’s date and asks for recent news based on the user’s category | One item with a completed message response, generated text, and URL citation annotations | Combines the date and prompt instructions, sends them to the model, and returns text with source citations. |
 
-
 ## 2. Execution Trace
 
 The `If` node checked whether `company_size` was greater than or equal to `50`. Lena’s company size was `10`, so the item went to the False Branch. `Edit Fields2` kept the original fields and added `Priority: normal` and a personalized reply.
