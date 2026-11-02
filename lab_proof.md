@@ -1,7 +1,7 @@
 # n8n Node Reference Table
 
 **Lab:** Become the person who reads the docs
-**Author:** Ayhan Demir | Ironhack AI Consulting & Integration Bootcamp | November 2026
+**Author:** Ayhan Demir | Ironhack AI Consulting & Integration Bootcamp | 02 November 2026
 
 
 ## Workflows analysed (also in the excel in same repo with more details and better UI)
@@ -14,7 +14,7 @@
 | **W3** | Lena Company size (lead routing) | 6 | Manual Trigger -> Edit Fields (sample lead) -> If company_size >= 50 -> true: Edit Fields1 -> OpenAI reply; false: Edit Fields2 (standard reply) |
 | **W4** | Canyon AI Content Creator | 14 | Form Trigger -> Code -> HTTP GET (GitHub) -> Code -> HTTP POST (OpenAI) -> Code -> Form review -> If -> approve: Code -> Convert to File -> Form ending; rewrite: Code -> back to HTTP POST |
 
-**17 distinct node types** analysed (plus Sticky Note), across 43 node instances.
+**15 distinct node types** analysed, across 43 node instances.
 
 # Reference table
 
