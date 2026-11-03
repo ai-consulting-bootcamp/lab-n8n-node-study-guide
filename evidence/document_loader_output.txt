@@ -1,0 +1,58 @@
+INPUT
+{
+  "mimeType": "application/pdf",
+  "fileType": "pdf",
+  "fileExtension": "pdf",
+  "data": "filesystem-v2",
+  "fileName": "LagerFlow_Product_FAQ.pdf",
+  "id": "filesystem-v2:workflows/20sinDycqyW6BZ2r/executions/temp/binary_data/53357647-3013-4a40-ae67-1653b70f7a52",
+  "fileSize": "3.6 kB",
+  "bytes": 3602
+}
+OUTPUT
+metadata
+pageContent
+Monday to Saturday, 7:00 to 20:00. Enterprise: 24/7 phone support and a personal customer success\nmanager.\n9. How long is the contract?\nThe minimum contract is 12 months. After that, you can cancel with 3 months' notice.\n10. Can we try LagerFlow first?\nYes. We offer a free 45-minute online demo and a 14-day test account with sample data. To book a\ndemo, write to sales@lagerflow.example.\n11. Which languages does LagerFlow support?\nThe software is available in German, English, Polish and Turkish.
+metadata
+source
+blob
+blobType
+application/pdf
+pdf
+version
+1.10.100
+info
+PDFFormatVersion
+1.4
+IsAcroFormPresent
+false
+IsXFAPresent
+false
+Title
+LagerFlow Product FAQ
+Author
+(anonymous)
+Subject
+(unspecified)
+Keywords
+Creator
+(unspecified)
+Producer
+ReportLab PDF Library - (opensource)
+CreationDate
+D:20261031230902+00'00'
+ModDate
+D:20261031230902+00'00'
+Trapped
+name
+False
+metadata
+[null]
+totalPages
+1
+loc
+lines
+from
+31
+to
+39

@@ -1,0 +1,217 @@
+{
+  "name": "Lena-qualify",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3c946ec0-d021-4680-aeeb-487cd8cc30e3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n\n  \"name\": \"Lena\",\n\n  \"email\": \"lena@example.com\",\n\n  \"company\": \"ABC GmbH\",\n\n  \"company_size\": 50,\n\n  \"industry\": \"logistics\",\n\n  \"job_title\": \"Head of Operations\",\n\n  \"message\": \"We're moving our warehouses to a new system in January and need a solution before then.\"\n\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7160beb1-8c1c-4be9-836e-2b3a72efd9b2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0301e022-6fc1-4b82-8b4c-61c8264a14d7",
+              "leftValue": "={{ $json.company_size }}",
+              "rightValue": "=50",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "477fd6a9-1364-419e-8589-737f61d51966",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "47288ee0-a62b-4a59-b8fd-86b3559709c3",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "You are a friendly sales assistant for a B2B software company. Write replies of maximum three sentences. Always suggest two demo dates next week."
+            },
+            {
+              "content": "=Today is {{ $today }}. Write a reply to {{ $json.name }}, {{ $json.job_title }} at {{ $json.company }}. Her message: \"{{ $json.message }}\""
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "abf82693-b939-48d2-a6cf-a08e9d700a82",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "1CtT98pn863pfD0h",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9cf0b611-1b3c-4f66-8c88-cff801c390a8",
+              "name": "priority",
+              "value": "normal",
+              "type": "string"
+            },
+            {
+              "id": "4c927d19-43e2-4a86-96f6-699b46dca3fc",
+              "name": "reply",
+              "value": "=Hi {{ $json.name }}, thank you for your interest in our software! Here is our price list and a short product video: [link]. If you'd like a demo, just reply to this email.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        112
+      ],
+      "id": "f09e0e8a-e52b-4b56-a659-84b7c26bf9b3",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b4cb28f7-23df-4a52-bdaf-9e031b2e3173",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "49b42c0051ee1c04693c425c4d57eeb1072531f55d1515f0d9aeb5a5977f030a"
+  },
+  "id": "yuOQScHBOtzHjpWr",
+  "tags": []
+}
