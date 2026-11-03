@@ -1,0 +1,69 @@
+0
+pageContent:LagerFlow – Product FAQ\nFictional company, made for training only. Version: November 2026.\nLagerFlow GmbH is a software company in Hamburg. We make cloud software for warehouse\nmanagement (WMS) for small and medium logistics companies.\n1. What does LagerFlow do?\nLagerFlow helps companies manage their warehouses: stock levels, incoming goods, picking, packing\nand shipping. Everything runs in the browser. Warehouse staff can also use handheld barcode\nscanners.\n2. Who is LagerFlow for?\nLagerFlow is made for companies with 20 to 500 employees and 1 to 10 warehouses. For companies\nwith fewer than 20 employees, we recommend our partner tools instead.\n3. How much does LagerFlow cost?\nThere are three plans, billed per month: Basic costs 490 EUR (1 warehouse, up to 10 users). Business\ncosts 1,290 EUR (up to 3 warehouses, up to 50 users). Enterprise has a custom price (more than 3\nwarehouses). There is a one-time setup fee of 2,500 EUR for all plans.\n4. How long does setup take?
+metadata
+blobType:application/pdf
+loc.lines.from:1
+loc.lines.to:16
+pdf.info.Author:(anonymous)
+pdf.info.CreationDate:D:20261031230902+00'00'
+pdf.info.Creator:(unspecified)
+pdf.info.IsAcroFormPresent:false
+pdf.info.IsXFAPresent:false
+pdf.info.Keywords:empty
+pdf.info.ModDate:D:20261031230902+00'00'
+pdf.info.PDFFormatVersion:1.4
+pdf.info.Producer:ReportLab PDF Library - (opensource)
+pdf.info.Subject:(unspecified)
+pdf.info.Title:LagerFlow Product FAQ
+pdf.info.Trapped.name:False
+pdf.totalPages:1
+pdf.version:1.10.100
+source:blob
+relevanceScore:0.19433758
+id:5ab2fdc8-1f41-4e0c-b33f-b8226955df76
+1
+pageContent:LagerFlow – Product FAQ\nFictional company, made for training only. Version: November 2026.\nLagerFlow GmbH is a software company in Hamburg. We make cloud software for warehouse\nmanagement (WMS) for small and medium logistics companies.\n1. What does LagerFlow do?\nLagerFlow helps companies manage their warehouses: stock levels, incoming goods, picking, packing\nand shipping. Everything runs in the browser. Warehouse staff can also use handheld barcode\nscanners.\n2. Who is LagerFlow for?\nLagerFlow is made for companies with 20 to 500 employees and 1 to 10 warehouses. For companies\nwith fewer than 20 employees, we recommend our partner tools instead.\n3. How much does LagerFlow cost?\nThere are three plans, billed per month: Basic costs 490 EUR (1 warehouse, up to 10 users). Business\ncosts 1,290 EUR (up to 3 warehouses, up to 50 users). Enterprise has a custom price (more than 3\nwarehouses). There is a one-time setup fee of 2,500 EUR for all plans.\n4. How long does setup take?
+metadata
+blobType:application/pdf
+loc.lines.from:1
+loc.lines.to:16
+pdf.info.Author:(anonymous)
+pdf.info.CreationDate:D:20261031230902+00'00'
+pdf.info.Creator:(unspecified)
+pdf.info.IsAcroFormPresent:false
+pdf.info.IsXFAPresent:false
+pdf.info.Keywords:empty
+pdf.info.ModDate:D:20261031230902+00'00'
+pdf.info.PDFFormatVersion:1.4
+pdf.info.Producer:ReportLab PDF Library - (opensource)
+pdf.info.Subject:(unspecified)
+pdf.info.Title:LagerFlow Product FAQ
+pdf.info.Trapped.name:False
+pdf.totalPages:1
+pdf.version:1.10.100
+source:blob
+relevanceScore:0.19433758
+id:39e12997-e86f-44fb-874f-d3b6531fd7ab
+2
+pageContent:LagerFlow – Product FAQ\nFictional company, made for training only. Version: November 2026.\nLagerFlow GmbH is a software company in Hamburg. We make cloud software for warehouse\nmanagement (WMS) for small and medium logistics companies.\n1. What does LagerFlow do?\nLagerFlow helps companies manage their warehouses: stock levels, incoming goods, picking, packing\nand shipping. Everything runs in the browser. Warehouse staff can also use handheld barcode\nscanners.\n2. Who is LagerFlow for?\nLagerFlow is made for companies with 20 to 500 employees and 1 to 10 warehouses. For companies\nwith fewer than 20 employees, we recommend our partner tools instead.\n3. How much does LagerFlow cost?\nThere are three plans, billed per month: Basic costs 490 EUR (1 warehouse, up to 10 users). Business\ncosts 1,290 EUR (up to 3 warehouses, up to 50 users). Enterprise has a custom price (more than 3\nwarehouses). There is a one-time setup fee of 2,500 EUR for all plans.\n4. How long does setup take?
+metadata
+blobType:application/pdf
+loc.lines.from:1
+loc.lines.to:16
+pdf.info.Author:(anonymous)
+pdf.info.CreationDate:D:20261031230902+00'00'
+pdf.info.Creator:(unspecified)
+pdf.info.IsAcroFormPresent:false
+pdf.info.IsXFAPresent:false
+pdf.info.Keywords:empty
+pdf.info.ModDate:D:20261031230902+00'00'
+pdf.info.PDFFormatVersion:1.4
+pdf.info.Producer:ReportLab PDF Library - (opensource)
+pdf.info.Subject:(unspecified)
+pdf.info.Title:LagerFlow Product FAQ
+pdf.info.Trapped.name:False
+pdf.totalPages:1
+pdf.version:1.10.100
+source:blob
+relevanceScore:0.19433758
+id:730c10de-be6c-4af7-9057-10f9017665e0
