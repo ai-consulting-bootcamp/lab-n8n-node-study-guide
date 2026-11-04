@@ -1,0 +1,188 @@
+{
+  "name": "Node Study - Data Mapping",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "91af9f17-4f6d-438f-ae06-054337351806",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"request_id\": \"lab-001\",\n  \"name\": \"Marta\",\n  \"email\": \"marta@example.com\",\n  \"company_size\": 120,\n  \"source\": \"lab\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "cad9dfb5-0784-4f64-a725-181a7d2c151c",
+      "name": "Create Sample Input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "74f28024-d1ab-4915-a37e-740c6bc26d58",
+              "name": "lead_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "2210042d-6975-4791-871d-ae2da4e2d228",
+              "name": "contact_name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "ea1f9e0e-3f15-4299-9a55-2c94067ce2c8",
+              "name": "contact_email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "9e18bcd1-9725-483b-ae2c-b78cd6bf5676",
+              "name": "priority",
+              "value": "={{ $json.company_size >= 50 ? 'high' : 'normal' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1a1736da-e197-4e66-8898-b749dbb6b6e4",
+      "name": "Map Lead Record"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "DLLMn46uBtHo3jIQ",
+          "mode": "list",
+          "cachedResultName": "Lab Lead Records",
+          "cachedResultUrl": "/projects/e20tj3hySxUTiIYt/datatables/DLLMn46uBtHo3jIQ"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "contact_email",
+              "displayName": "contact_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "a86425e7-12dd-4936-bb94-bcbe7c31e133",
+      "name": "Save Lead Record"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Create Sample Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Sample Input": {
+      "main": [
+        [
+          {
+            "node": "Map Lead Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Lead Record": {
+      "main": [
+        [
+          {
+            "node": "Save Lead Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d81d0fdf-6835-430c-ae4c-89f3f37b7a65",
+  "meta": {
+    "instanceId": "49b42c0051ee1c04693c425c4d57eeb1072531f55d1515f0d9aeb5a5977f030a"
+  },
+  "id": "zYqF9RAE7cARvz4r",
+  "tags": []
+}
