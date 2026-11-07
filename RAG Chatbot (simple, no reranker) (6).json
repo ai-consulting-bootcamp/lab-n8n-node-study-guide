@@ -1,0 +1,304 @@
+{
+  "name": "RAG Chatbot (simple, no reranker)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Upload Documents for RAG",
+        "formDescription": "Upload PDF, CSV, or JSON files to add to the knowledge base",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload Files",
+              "fieldType": "file",
+              "fieldName": "documents",
+              "acceptFileTypes": ".pdf, .csv, .json"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e771f1c6-57ad-4fc6-85c2-208217049b9e",
+      "name": "Upload Documents Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        16,
+        176
+      ],
+      "alwaysOutputData": false,
+      "webhookId": "e6178eb9-656f-4076-8477-8b01864f56b9"
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "id": "27a2c70d-c9e7-4eb5-9546-c84537488e91",
+      "name": "OpenAI Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "6nwT8TtpZ24gFSyi",
+          "name": "OpenAi account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "id": "33ee991e-77bc-4134-83b6-65fb749a06da",
+      "name": "Document Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        368,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9d7d93c4-1ed2-481c-bf58-8ebddd39708c",
+      "name": "Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        448,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hello! I can answer questions about your uploaded documents. What would you like to know?",
+        "options": {
+          "responseMode": "streaming"
+        }
+      },
+      "id": "93ea8765-7e41-4487-afea-57dabe3ed059",
+      "name": "Chat Interface",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        16,
+        816
+      ],
+      "webhookId": "dac8ee1c-8990-49dd-848e-fa4e114569fc"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant that answers questions based ONLY on the retrieved document context. If the context does not contain enough information to answer the question confidently, respond with: \"I couldn't find that in the uploaded documents.\" Always cite which documents you used to answer.",
+          "enableStreaming": true
+        }
+      },
+      "id": "311e1c84-9a29-4fa9-8340-982a5726b28a",
+      "name": "RAG Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        272,
+        816
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5.4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "2e794647-2f45-41cc-a844-0242351ede9f",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        1040
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "KfZggDXLFV3HLzri",
+          "name": "OpenAi account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "dimensions": 1536
+        }
+      },
+      "id": "f8643bc5-a0cc-4567-bdf4-c27ed462d5a7",
+      "name": "Query Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        1248
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "KfZggDXLFV3HLzri",
+          "name": "OpenAi account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "value": "lab_faq",
+          "mode": "list"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        64
+      ],
+      "id": "80946852-6775-41c7-bd3b-77c31b383d0c",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use this to look up facts in the LagerFlow product FAQ",
+        "memoryKey": {
+          "__rl": true,
+          "value": "lab_faq",
+          "mode": "list",
+          "cachedResultName": "lab_faq"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        992
+      ],
+      "id": "a2e8ed63-eba4-49b1-8ac2-60b767f35bd8",
+      "name": "Simple Vector Store1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Upload Documents Form": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Document Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Document Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Interface": {
+      "main": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "abf282e8-1e1e-4b41-bea2-777503e8afd2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "49b42c0051ee1c04693c425c4d57eeb1072531f55d1515f0d9aeb5a5977f030a"
+  },
+  "id": "N0oSPRKAtzqPVeen",
+  "tags": []
+}
